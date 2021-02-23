@@ -19,11 +19,11 @@
     const lowEnd = document.getElementById("lowHeight");
     const highEnd = document.getElementById("highHeight");
 
-    const speedAdjBtn  = document.getElementById("changeSpeed");
-    const speed = document.getElementById("inputSpeed");
-    speedAdjBtn.addEventListener("click", () => {
-        rate = speed.value || 150;
-    });
+    // const speedAdjBtn  = document.getElementById("changeSpeed");
+    // const speed = document.getElementById("inputSpeed");
+    // speedAdjBtn.addEventListener("click", () => {
+    //     rate = speed.value || 150;
+    // });
 
     const timerTextLocation = document.getElementById("timer");
     const numCount = document.getElementById("numberCount");
@@ -111,13 +111,18 @@
     }
 
     restart.addEventListener("click", () => {
+        randomTowerHeights = [];
         swapsCalled.innerText = "0";
         let shortest = 5;
         let tallest = 550;
         let count = 100;
 
         if(lowEnd.value.length > 0){
-            shortest = parseFloat(lowEnd.value);
+            let input = lowEnd.value;
+            shortest = isNumberCheck(lowEnd.value, 1);
+            if(shortest !== input){
+                lowEnd.value = shortest;
+            }
             if(shortest < 1){
                 shortest = 1;
                 lowEnd.value = shortest.toString();
@@ -125,7 +130,11 @@
         }
 
         if(highEnd.value.length > 0){
-            tallest = parseFloat(highEnd.value);
+            let input = highEnd.value;
+            tallest = isNumberCheck(highEnd.value, 695);
+            if(input !== tallest){
+                highEnd.value = tallest;
+            }
             if(tallest > 695){
                 tallest = 695;
                 highEnd.value = 695;
@@ -133,13 +142,16 @@
         }
 
         if(numCount.value.length > 0) {
-            count = parseFloat(numCount.value);
+            let input = numCount.value;
+            count = isNumberCheck(numCount.value, 100);
             if(count > 5000){
                 count = 5000;
                 numCount.value = 5000;
             } else if (count < 3){
                 count = 3;
                 numCount.value = 3;
+            } else if (input !== count){
+                numCount.value = count;
             }
         }
 
@@ -231,6 +243,10 @@
 
     function random(m, t){
         return ~~(Math.random() * (t - m)) + m;
+    }
+
+    function isNumberCheck(input, x){
+        return isNaN(input) ? x : parseFloat(input);
     }
 
 })();
