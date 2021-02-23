@@ -40,19 +40,36 @@
 
     function setUp() {
         genRandomNumbersInRange(100, 2, 598);
-        fillLocationsArray(randomTowerHeights);
-        renderTowers();
-        drawTowersOnCanvas(towersArr);
+        fillLocationsArrayFromRandomNumbers(randomTowerHeights);
+        fillTowersArrayFromLocations();
+        drawTowersAfterCreated(towersArr);
     }
 
-    function drawTowersOnCanvas(allTowersArr) {
-        let towerWidth = canvasWidth  / allTowersArr.length;
-        for(let i = 0; i < allTowersArr.length; i+=1){
-            drawRectangleShape(allTowersArr[i].x, c.height, towerWidth - 2, -allTowersArr[i].h, "#ffffff");
+    function sortingInProgress(sortInProgressArray){
+        fillLocationsArrayFromRandomNumbers(sortInProgressArray);
+        fillTowersArrayFromLocations();
+        drawTowersAfterCreated(sortInProgressArray);
+    }
+
+    // 1 = > generate 'x' amount of random numbers within a range
+    // 2 = > Create a locations array based on that amount of numbers for evenly spaced towers / tower widths
+    // 3 = > Create an array of Tower objects based on the random numbers as Heights and in the locations from locations array
+    // 4 = > Draw those towers on the canvas as the x and y positions for each Tower in Towers array
+
+
+
+    //========1
+    function genRandomNumbersInRange(x, low, high){
+        randomTowerHeights = []; // reset the towersArr array
+        for(let i = 0; i < x; i++){
+            let ran = random(low, high);
+            randomTowerHeights.push(ran);
         }
+        return randomTowerHeights;
     }
 
-    function fillLocationsArray(amountOfNumbersChosen){
+    //========2
+    function fillLocationsArrayFromRandomNumbers(amountOfNumbersChosen){
         locations = [];
         let towerWidth = canvasWidth  / amountOfNumbersChosen.length;
         let towerLocation = 0;
@@ -63,19 +80,8 @@
     }
 
 
-
-    function genRandomNumbersInRange(x, low, high){
-        randomTowerHeights = []; // reset the towersArr array
-        for(let i = 0; i < x; i++){
-            let ran = random(low, high);
-            randomTowerHeights.push(ran);
-        }
-        return randomTowerHeights;
-    }
-
-
-
-    function renderTowers(){
+    //==========3
+    function fillTowersArrayFromLocations(){
         towersArr = [];
         for(let i = 0; i < randomTowerHeights.length; i++){
             // create a tower obj on the screen at each x spot and at that randomTowerHeights height
@@ -83,17 +89,23 @@
         }
     }
 
+    //==========4
+    function drawTowersAfterCreated(allTowersArr) {
+        let towerWidth = canvasWidth  / allTowersArr.length;
+        for(let i = 0; i < allTowersArr.length; i+=1){
+            drawRectangleShape(allTowersArr[i].x, c.height, towerWidth - 2, -allTowersArr[i].h, "#ffffff");
+        }
+    }
 
 
 
-
-    // setInterval(load, 15500);
+    // setInterval(load, 200);
     function load(){
         createCanvas();
-        setUp()
+        setUp();
     }
     createCanvas();
-    setUp()
+    setUp();
 
 
 
@@ -105,35 +117,26 @@
         clock = performance.now();
         callInsertion();
         clockAfter = performance.now();
-        timerTextLocation.innerText = (clockAfter - clock).toString();
+        timerTextLocation.innerText = (clockAfter - clock).toFixed(4);
     });
     bubble.addEventListener("click", () => {
         resetPage();
         clock = performance.now();
         callBubble();
         clockAfter = performance.now();
-        timerTextLocation.innerText = (clockAfter - clock).toString();
+        timerTextLocation.innerText = (clockAfter - clock).toFixed(4);
     });
     selection.addEventListener("click", () => {
         resetPage();
         clock = performance.now();
         callSelection();
         clockAfter = performance.now();
-        timerTextLocation.innerText = (clockAfter - clock).toString();
+        timerTextLocation.innerText = (clockAfter - clock).toFixed(4);
     });
 
-
     function callInsertion() {
-        // it is not sorted before by tower.h and it is after
-        // console.log(towersArr);
-        let temp = [];
-        for(let i = 0; i < towersArr.length; i++){
-            temp.push(towersArr[i]);
-        }
-
-        insertionSort(temp);
+        insertionSort(towersArr);
         swapsCalled.innerText = swapCount;
-        // console.log(temp);
     }
 
     function callBubble(){
@@ -186,7 +189,23 @@
         arr[i] = arr[j];
         arr[j] = temp;
         swapCount++;
+        sortingInProgress(arr); // attempt to re render the towers every swap
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
