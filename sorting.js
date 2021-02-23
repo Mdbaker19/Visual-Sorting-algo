@@ -3,49 +3,51 @@
     const c = document.getElementById("canvas");
     const cc = c.getContext("2d");
 
+    const canvasWidth = c.width;
+
     let randomTowerHeights = [];
-    let locations = [];
     let rate = 150;
     let swapCount = 0;
     let timer = 0;
     let clock;
     let clockAfter;
-    const canvasWidth = c.width;
-
 
     const insertion = document.getElementById("insertionSort");
     const bubble = document.getElementById("bubbleSort");
     const selection = document.getElementById("selectionSort");
 
-    const timerTextLocation = document.getElementById("timer");
+
     const speedAdjBtn  = document.getElementById("changeSpeed");
     const speed = document.getElementById("inputSpeed");
     speedAdjBtn.addEventListener("click", () => {
         rate = speed.value || 150;
     });
 
+    const timerTextLocation = document.getElementById("timer");
     const numCount = document.getElementById("numberCount");
     const restart = document.getElementById("reset");
     const swapsCalled = document.getElementById("swapsText");
 
+    // create canvas
+
+    // 1 = > generate 'x' amount of random numbers within a range ( start with initial set up )
+    // 2 = > Draw those towers on the canvas at locations spaced based on amount of nums choosen and at height
+
+    createCanvas();
+    setUp(100, 2, 598); // initial
 
 
-
-
-
-    function setUp(x, y, h) {
+    function setUp(x, y, h) { // used on reset for new range of numbers
         createCanvas();
         genRandomNumbersInRange(x, y, h);
         drawTowersAfterCreated(randomTowerHeights);
     }
 
     function sortingInProgress(sortInProgressArray){
-        createCanvas();
+        createCanvas(); // draw the canvas
         drawTowersAfterCreated(sortInProgressArray);
     }
 
-    // 1 = > generate 'x' amount of random numbers within a range
-    // 2 = > Draw those towers on the canvas at locations spaced based on amount of nums choosen and at height
 
 
 
@@ -72,13 +74,7 @@
 
 
 
-    // setInterval(load, 200);
-    function load(){
-        createCanvas();
-        setUp();
-    }
-    createCanvas();
-    setUp(100, 2, 598);
+
 
 
 
@@ -88,56 +84,60 @@
     insertion.addEventListener("click", () => {
         resetPage();
         clock = performance.now();
-        callInsertion();
+        insertionSort(randomTowerHeights);
         clockAfter = performance.now();
         timerTextLocation.innerText = (clockAfter - clock).toFixed(4);
     });
     bubble.addEventListener("click", () => {
         resetPage();
         clock = performance.now();
-        callBubble();
+        bubbleSort(randomTowerHeights);
         clockAfter = performance.now();
         timerTextLocation.innerText = (clockAfter - clock).toFixed(4);
     });
     selection.addEventListener("click", () => {
         resetPage();
         clock = performance.now();
-        callSelection();
+        selectionSort(randomTowerHeights);
         clockAfter = performance.now();
         timerTextLocation.innerText = (clockAfter - clock).toFixed(4);
     });
 
-    function callInsertion() {
-        insertionSort(randomTowerHeights);
-        swapsCalled.innerText = swapCount;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    function resetPage(){
+        swapsCalled.innerText = "0";
+        timerTextLocation.innerText = "0";
+        timer = 0;
+        swapCount = 0;
     }
 
-    function callBubble(){
-        bubbleSort(randomTowerHeights);
-        swapsCalled.innerText = swapCount;
-    }
-    function callSelection(){
-        selectionSort(randomTowerHeights);
-        swapsCalled.innerText = swapCount;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    restart.addEventListener("click", () => {
+        swapsCalled.innerText = "0";
+        if(numCount.value.length > 0) { // is a number entered ? if not then default 100 towersArr
+            let count = parseFloat(numCount.value);
+            if(count > 5000){   // no more than 5000 towersArr at time
+                count = 5000;
+            }
+            setUp(count, 5, 550);
+        } else {
+            setUp(100, 5, 550)
+        }
+    });
 
 
 
@@ -162,17 +162,9 @@
         arr[i] = arr[j];
         arr[j] = temp;
         swapCount++;
+        swapsCalled.innerText = swapCount;
         sortingInProgress(arr); // attempt to re render the towers every swap
     }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -227,27 +219,9 @@
         return arr;
     }
 
-    restart.addEventListener("click", () => {
-        swapsCalled.innerText = "0";
-        if(numCount.value.length > 0) { // is a number entered ? if not then default 100 towersArr
-            let count = parseFloat(numCount.value);
-            if(count > 5000){   // no more than 5000 towersArr at time
-                count = 5000;
-            }
-            setUp(count, 5, 550);
-        } else {
-            setUp(100, 5, 550)
-        }
-    });
 
     function random(m, t){
         return ~~(Math.random() * (t - m)) + m;
     }
 
-    function resetPage(){
-        swapsCalled.innerText = "0";
-        timerTextLocation.innerText = "0";
-        timer = 0;
-        swapCount = 0;
-    }
 })();
