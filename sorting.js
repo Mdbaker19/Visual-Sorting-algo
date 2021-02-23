@@ -51,7 +51,6 @@
             locations.push(towerLocation);
             towerLocation += towerWidth;
         }
-        console.log(locations);
     }
 
 
@@ -80,7 +79,8 @@
 
     setInterval(load, 50);
     function load(){
-
+        createCanvas();
+        drawTowersOnCanvas(randomTowerHeights);
     }
 
 
