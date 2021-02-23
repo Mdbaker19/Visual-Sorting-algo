@@ -12,6 +12,9 @@
     let towersArr = [];
     let rate = 150;
     let swapCount = 0;
+    let timer = 0;
+    let clock;
+    let clockAfter;
     const canvasWidth = c.width;
 
 
@@ -19,6 +22,7 @@
     const bubble = document.getElementById("bubbleSort");
     const selection = document.getElementById("selectionSort");
 
+    const timerTextLocation = document.getElementById("timer");
     const speedAdjBtn  = document.getElementById("changeSpeed");
     const speed = document.getElementById("inputSpeed");
     speedAdjBtn.addEventListener("click", () => {
@@ -90,31 +94,46 @@
 
     insertion.addEventListener("click", () => {
         swapCount = 0;
+        timer = 0;
+        clock = performance.now();
         callInsertion();
+        clockAfter = performance.now();
+        timerTextLocation.innerText = (clockAfter - clock);
     });
     bubble.addEventListener("click", () => {
         swapCount = 0;
+        timer = 0;
+        clock = performance.now();
         callBubble();
+        clockAfter = performance.now();
+        timerTextLocation.innerText = (clockAfter - clock);
     });
     selection.addEventListener("click", () => {
         swapCount = 0;
+        timer = 0;
+        clock = performance.now();
         callSelection();
+        clockAfter = performance.now();
+        timerTextLocation.innerText = (clockAfter - clock);
     });
 
 
     function callInsertion() {
         swapsCalled.innerText = "0";
+        timerTextLocation.innerText = "0";
         insertionSort(randomTowerHeights);
         swapsCalled.innerText = swapCount;
     }
 
     function callBubble(){
         swapsCalled.innerText = "0";
+        timerTextLocation.innerText = "0";
         bubbleSort(randomTowerHeights);
         swapsCalled.innerText = swapCount;
     }
     function callSelection(){
         swapsCalled.innerText = "0";
+        timerTextLocation.innerText = "0";
         selectionSort(randomTowerHeights);
         swapsCalled.innerText = swapCount;
     }
