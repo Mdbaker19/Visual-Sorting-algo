@@ -1,75 +1,169 @@
 (function (){
-
+    "use strict";
+    const c = document.getElementById("canvas");
+    const cc = c.getContext("2d");
     function Tower(x, h){
         this.x = x;
         this.h = h;
     }
 
-    const insert = document.getElementById("start");
-    const bubble = document.getElementById("start2");
-    const selection = document.getElementById("start3");
-    const speedAdj  = document.getElementById("changeSpeed");
-    const speed = document.getElementById("speed");
-    const numCount = document.getElementById("howManyNums");
-    const restart = document.getElementById("restart");
-    const begin = document.getElementById("begin");
-    const c = document.getElementById("canvas");
-    const cc = c.getContext("2d");
-    const swapsCalled = document.getElementById("times");
-    const screen = c.width;
-    let nums = [];
+    let randomTowerHeights = [];
     let locations = [];
-    let towers = [];
+    let towersArr = [];
     let rate = 150;
     let swapCount = 0;
-    let bSort;
-    let iSort;
+    const canvasWidth = c.width;
 
-    begin.addEventListener("click", renderTowers);
 
-    restart.addEventListener("click", () => {
-        clearInterval(bSort);
-        clearInterval(iSort);
-        if(numCount.value.length > 0) {
-            let count = parseFloat(numCount.value);
-            if(count > 10000){
-                count = 10000;
-            }
-            genRandomNums(count, 5, 550);
-        } else {
-            genRandomNums(100, 5, 550)
-        }
-    })
+    const insertion = document.getElementById("insertionSort");
+    const bubble = document.getElementById("bubbleSort");
+    const selection = document.getElementById("selectionSort");
 
-    genRandomNums(100,5, 550);
-    setInterval(load, 50);
-    function load(){
-        draw();
-    }
-    speedAdj.addEventListener("click", () => {
-        let newSpeed = speed.value || 150;
-        rate = newSpeed;
+    const speedAdjBtn  = document.getElementById("changeSpeed");
+    const speed = document.getElementById("inputSpeed");
+    speedAdjBtn.addEventListener("click", () => {
+        rate = speed.value || 150;
     });
 
+    const numCount = document.getElementById("numberCount");
+    const restart = document.getElementById("reset");
+    const swapsCalled = document.getElementById("swapsText");
 
 
 
-    insert.addEventListener("click", () => {
+
+    createCanvas();
+
+
+    function setUp() {
+        genRandomNumbersInRange(100, 2, 598);
+        drawTowersOnCanvas(randomTowerHeights);
+        renderTowers();
+    }
+    setUp();
+
+    function drawTowersOnCanvas(amountOfNumbersChosen) {
+        locations = [];
+        let towerWidth = canvasWidth  / amountOfNumbersChosen.length;
+        let towerLocation = 0;
+        for(let i = 0; i < amountOfNumbersChosen.length; i+=1){
+            drawRectangleShape(towerLocation, c.height, towerWidth - 2, -amountOfNumbersChosen[i], "#ffffff");
+            locations.push(towerLocation);
+            towerLocation += towerWidth;
+        }
+        console.log(locations);
+    }
+
+
+
+    function genRandomNumbersInRange(x, low, high){
+        randomTowerHeights = []; // reset the towersArr array
+        for(let i = 0; i < x; i++){
+            let ran = random(low, high);
+            randomTowerHeights.push(ran);
+        }
+        return randomTowerHeights;
+    }
+
+
+
+    function renderTowers(){
+        for(let i = 0; i < randomTowerHeights.length; i++){
+            // create a tower obj on the screen at each x spot and at that randomTowerHeights height
+            towersArr.push(new Tower(locations[i], randomTowerHeights[i]));
+        }
+    }
+
+
+
+
+
+    setInterval(load, 50);
+    function load(){
+
+    }
+
+
+
+
+
+
+    insertion.addEventListener("click", () => {
         swapCount = 0;
-        iSort = setInterval(callInsertion, rate);
+        callInsertion();
     });
     bubble.addEventListener("click", () => {
         swapCount = 0;
-        bSort = setInterval(callBubble, rate);
+        callBubble();
     });
     selection.addEventListener("click", () => {
         swapCount = 0;
         callSelection();
-    })
+    });
+
+
     function callInsertion() {
+        swapsCalled.innerText = "0";
+        insertionSort(randomTowerHeights);
         swapsCalled.innerText = swapCount;
-        insertionSort(nums);
     }
+
+    function callBubble(){
+        swapsCalled.innerText = "0";
+        bubbleSort(randomTowerHeights);
+        swapsCalled.innerText = swapCount;
+    }
+    function callSelection(){
+        swapsCalled.innerText = "0";
+        selectionSort(randomTowerHeights);
+        swapsCalled.innerText = swapCount;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    function createCanvas(){
+        drawRectangleShape(0, 0, c.width, c.height, "#181818");
+    }
+
+
+    function drawRectangleShape(lx, ty, w, h, c){
+        cc.fillStyle = c;
+        cc.fillRect(lx, ty, w, h);
+    }
+
+
+
+
+    function swap(i, j, arr){
+        let temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+        swapCount++;
+    }
+
+
+
     function insertionSort(arr){
         for(let i = 0; i < arr.length - 1; i++){
             let j = i;
@@ -81,15 +175,11 @@
         return arr;
     }
 
-    function callBubble(){
-        swapsCalled.innerText = swapCount;
-        bubbleSort(nums);
-    }
     function bubbleSort(arr){
         let isSorted = false;
         while(!isSorted){
             isSorted = true;
-            for(let i = 0; i < arr.length - 1; i++){ // same reason
+            for(let i = 0; i < arr.length - 1; i++){
                 for(let j = 0; j < arr.length - 1; j++){
                     if(arr[j] > arr[j + 1]){
                         isSorted = false;
@@ -101,10 +191,6 @@
         return arr;
     }
 
-    function callSelection(){
-        swapsCalled.innerText = swapCount;
-        selectionSort(nums);
-    }
     function selectionSort(arr){
         let spot = 0;
         for(let i = 0; i < arr.length; i++){
@@ -123,74 +209,18 @@
         return arr;
     }
 
-
-
-    function swap(i, j, arr){
-        findMatchingTower(arr[i], arr[j]);// for coloring the curr one
-        let temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
-        swapCount++;
-    }
-
-    function findMatchingTower(larger, smaller){
-        let space = screen / towers.length;
-        //pass in the current num from arr
-        // find matching h in towers arr
-        // fill at that towers x and to h with red
-        let tSmaller = {x:null, h:null};
-        let tLarger = {x:null, h:null};
-        for(let i = 0; i < towers.length; i++){
-            if(towers[i].h === smaller){
-                tSmaller.h = towers[i].h;
-                tSmaller.x = towers[i].x;
-            } else if(towers[i].h === larger) {
-                tLarger.h = towers[i].h;
-                tLarger.x = towers[i].x;
+    restart.addEventListener("click", () => {
+        swapsCalled.innerText = "0";
+        if(numCount.value.length > 0) { // is a number entered ? if not then default 100 towersArr
+            let count = parseFloat(numCount.value);
+            if(count > 5000){   // no more than 5000 towersArr at time
+                count = 5000;
             }
+            genRandomNumbersInRange(count, 5, 550);
+        } else {
+            genRandomNumbersInRange(100, 5, 550)
         }
-        // console.log(tSmaller);
-        // fill(tSmaller.x, 0, space - 2, -tSmaller.h, "#cb2d2d");
-    }
-
-    function renderTowers(){
-        if(locations.length > 1){
-            locations = [];
-        }
-        // console.log(locations);
-        for(let i = 0; i < nums.length; i++){
-
-            towers.push(new Tower(locations[i], nums[i]));
-        }
-    }
-
-    function draw(){
-        fill(0, 0, c.width, c.height, "#181818");
-        drawNumLines(nums);
-    }
-    function fill(lx, ty, w, h, c){
-        cc.fillStyle = c;
-        cc.fillRect(lx, ty, w, h);
-    }
-
-    function drawNumLines(arr){
-        let space = screen  / arr.length;
-        let x = 0;
-        for(let i = 0; i < arr.length; i+=1){
-            // locations.push(x);
-            fill(x, c.height, space - 2, -arr[i], "#fff");
-            x+=space;
-        }
-    }
-
-    function genRandomNums(x, low, high){
-        nums = [];
-        for(let i = 0; i < x; i++){
-            let ran = random(low, high);
-            nums.push(ran);
-        }
-        return nums;
-    }
+    });
 
     function random(m, t){
         return ~~(Math.random() * (t - m)) + m;

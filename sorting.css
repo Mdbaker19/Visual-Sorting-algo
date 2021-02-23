@@ -6,3 +6,6 @@
 body{
     padding: 5px;
 }
+#canvas{
+    border: 5px solid black;
+}

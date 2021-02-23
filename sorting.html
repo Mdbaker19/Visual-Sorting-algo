@@ -11,22 +11,21 @@
 <body>
 
     <canvas id="canvas" width="1500" height="600"></canvas><br>
-    <button id="start">Insertion Sort</button><br>
-    <button id="start2">Bubble Sort</button><br>
-    <button id="start3">Selection Sort</button><br>
+    <button id="insertionSort">Insertion Sort</button><br>
+    <button id="bubbleSort">Bubble Sort</button><br>
+    <button id="selectionSort">Selection Sort</button><br>
     <label>
         How fast to cycle (default 150ms)
-        <input id="speed">
+        <input id="inputSpeed">
     </label>
     <button id="changeSpeed">Change Speed</button><br>
     <label>
         Enter how many numbers (default 100)
-        <input id="howManyNums">
+        <input id="numberCount">
     </label>
-    <button id="restart">Restart</button>
-    <button id="begin">Start</button><br>
+    <button id="reset">Reset</button><br>
 
-    <span>Amount of swaps called</span> <span id="times"></span>
+    <span>Amount of swaps called</span> <span id="swapsText"></span>
 
 <script src="sorting.js"></script>
 </body>
