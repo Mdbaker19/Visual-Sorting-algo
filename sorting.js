@@ -120,6 +120,7 @@
             shortest = parseFloat(lowEnd.value);
             if(shortest < 1){
                 shortest = 1;
+                lowEnd.value = shortest.toString();
             }
         }
 
@@ -127,6 +128,7 @@
             tallest = parseFloat(highEnd.value);
             if(tallest > 695){
                 tallest = 695;
+                highEnd.value = 695;
             }
         }
 
@@ -134,10 +136,21 @@
             count = parseFloat(numCount.value);
             if(count > 5000){
                 count = 5000;
+                numCount.value = 5000;
             } else if (count < 3){
                 count = 3;
+                numCount.value = 3;
             }
         }
+
+        if(shortest > tallest){
+            let temp = tallest;
+            tallest = shortest;
+            shortest = temp;
+            highEnd.value = tallest;
+            lowEnd.value = shortest;
+        }
+
         setUp(count, shortest, tallest);
     });
 
