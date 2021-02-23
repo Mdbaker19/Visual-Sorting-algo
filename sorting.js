@@ -16,6 +16,8 @@
     const bubble = document.getElementById("bubbleSort");
     const selection = document.getElementById("selectionSort");
 
+    const lowEnd = document.getElementById("lowHeight");
+    const highEnd = document.getElementById("highHeight");
 
     const speedAdjBtn  = document.getElementById("changeSpeed");
     const speed = document.getElementById("inputSpeed");
@@ -28,13 +30,9 @@
     const restart = document.getElementById("reset");
     const swapsCalled = document.getElementById("swapsText");
 
-    // create canvas
-
-    // 1 = > generate 'x' amount of random numbers within a range ( start with initial set up )
-    // 2 = > Draw those towers on the canvas at locations spaced based on amount of nums choosen and at height
-
+    // draw canvas
     createCanvas();
-    setUp(100, 2, 598); // initial
+    setUp(100, 2, 598); // initial set up for 100 numbers
 
 
     function setUp(x, y, h) { // used on reset for new range of numbers
@@ -49,9 +47,7 @@
     }
 
 
-
-
-    //======== 1
+    //======== generate 'x' amount of random numbers within a range ( start with initial set up )
     function genRandomNumbersInRange(x, low, high){
         randomTowerHeights = []; // reset the towersArr array
         for(let i = 0; i < x; i++){
@@ -60,9 +56,7 @@
         }
     }
 
-
-
-    //========== 2
+    //========== Draw those towers on the canvas at locations spaced based on amount of nums choosen and at height
     function drawTowersAfterCreated(allTowersArr) {
         let towerWidth = canvasWidth  / allTowersArr.length;
         let towerLocation = 0;
@@ -71,9 +65,6 @@
             towerLocation += towerWidth;
         }
     }
-
-
-
 
 
 
@@ -112,13 +103,6 @@
 
 
 
-
-
-
-
-
-
-
     function resetPage(){
         swapsCalled.innerText = "0";
         timerTextLocation.innerText = "0";
@@ -128,15 +112,33 @@
 
     restart.addEventListener("click", () => {
         swapsCalled.innerText = "0";
-        if(numCount.value.length > 0) { // is a number entered ? if not then default 100 towersArr
-            let count = parseFloat(numCount.value);
-            if(count > 5000){   // no more than 5000 towersArr at time
-                count = 5000;
+        let shortest = 5;
+        let tallest = 550;
+        let count = 100;
+
+        if(lowEnd.value.length > 0){
+            shortest = parseFloat(lowEnd.value);
+            if(shortest < 1){
+                shortest = 1;
             }
-            setUp(count, 5, 550);
-        } else {
-            setUp(100, 5, 550)
         }
+
+        if(highEnd.value.length > 0){
+            tallest = parseFloat(highEnd.value);
+            if(tallest > 695){
+                tallest = 695;
+            }
+        }
+
+        if(numCount.value.length > 0) {
+            count = parseFloat(numCount.value);
+            if(count > 5000){
+                count = 5000;
+            } else if (count < 3){
+                count = 3;
+            }
+        }
+        setUp(count, shortest, tallest);
     });
 
 
@@ -163,14 +165,8 @@
         arr[j] = temp;
         swapCount++;
         swapsCalled.innerText = swapCount;
-        sortingInProgress(arr); // attempt to re render the towers every swap
+        sortingInProgress(arr); // attempt to re render the towers every swap ……… still does not work, just gives a delay and renders at the end
     }
-
-
-
-
-
-
 
 
 
