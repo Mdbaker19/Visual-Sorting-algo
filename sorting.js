@@ -36,22 +36,27 @@
 
 
 
-    createCanvas();
 
 
     function setUp() {
         genRandomNumbersInRange(100, 2, 598);
-        drawTowersOnCanvas(randomTowerHeights);
+        fillLocationsArray(randomTowerHeights);
         renderTowers();
+        drawTowersOnCanvas(towersArr);
     }
-    setUp();
 
-    function drawTowersOnCanvas(amountOfNumbersChosen) {
+    function drawTowersOnCanvas(allTowersArr) {
+        let towerWidth = canvasWidth  / allTowersArr.length;
+        for(let i = 0; i < allTowersArr.length; i+=1){
+            drawRectangleShape(allTowersArr[i].x, c.height, towerWidth - 2, -allTowersArr[i].h, "#ffffff");
+        }
+    }
+
+    function fillLocationsArray(amountOfNumbersChosen){
         locations = [];
         let towerWidth = canvasWidth  / amountOfNumbersChosen.length;
         let towerLocation = 0;
         for(let i = 0; i < amountOfNumbersChosen.length; i+=1){
-            drawRectangleShape(towerLocation, c.height, towerWidth - 2, -amountOfNumbersChosen[i], "#ffffff");
             locations.push(towerLocation);
             towerLocation += towerWidth;
         }
@@ -71,6 +76,7 @@
 
 
     function renderTowers(){
+        towersArr = [];
         for(let i = 0; i < randomTowerHeights.length; i++){
             // create a tower obj on the screen at each x spot and at that randomTowerHeights height
             towersArr.push(new Tower(locations[i], randomTowerHeights[i]));
@@ -81,11 +87,13 @@
 
 
 
-    setInterval(load, 50);
+    // setInterval(load, 15500);
     function load(){
         createCanvas();
-        drawTowersOnCanvas(randomTowerHeights);
+        setUp()
     }
+    createCanvas();
+    setUp()
 
 
 
@@ -93,48 +101,47 @@
 
 
     insertion.addEventListener("click", () => {
-        swapCount = 0;
-        timer = 0;
+        resetPage();
         clock = performance.now();
         callInsertion();
         clockAfter = performance.now();
-        timerTextLocation.innerText = (clockAfter - clock);
+        timerTextLocation.innerText = (clockAfter - clock).toString();
     });
     bubble.addEventListener("click", () => {
-        swapCount = 0;
-        timer = 0;
+        resetPage();
         clock = performance.now();
         callBubble();
         clockAfter = performance.now();
-        timerTextLocation.innerText = (clockAfter - clock);
+        timerTextLocation.innerText = (clockAfter - clock).toString();
     });
     selection.addEventListener("click", () => {
-        swapCount = 0;
-        timer = 0;
+        resetPage();
         clock = performance.now();
         callSelection();
         clockAfter = performance.now();
-        timerTextLocation.innerText = (clockAfter - clock);
+        timerTextLocation.innerText = (clockAfter - clock).toString();
     });
 
 
     function callInsertion() {
-        swapsCalled.innerText = "0";
-        timerTextLocation.innerText = "0";
-        insertionSort(randomTowerHeights);
+        // it is not sorted before by tower.h and it is after
+        // console.log(towersArr);
+        let temp = [];
+        for(let i = 0; i < towersArr.length; i++){
+            temp.push(towersArr[i]);
+        }
+
+        insertionSort(temp);
         swapsCalled.innerText = swapCount;
+        // console.log(temp);
     }
 
     function callBubble(){
-        swapsCalled.innerText = "0";
-        timerTextLocation.innerText = "0";
-        bubbleSort(randomTowerHeights);
+        bubbleSort(towersArr);
         swapsCalled.innerText = swapCount;
     }
     function callSelection(){
-        swapsCalled.innerText = "0";
-        timerTextLocation.innerText = "0";
-        selectionSort(randomTowerHeights);
+        selectionSort(towersArr);
         swapsCalled.innerText = swapCount;
     }
 
@@ -186,7 +193,7 @@
     function insertionSort(arr){
         for(let i = 0; i < arr.length - 1; i++){
             let j = i;
-            while(j >= 0 && arr[j] > arr[j + 1]){
+            while(j >= 0 && arr[j].h > arr[j + 1].h){
                 swap(j, j+1, arr);
                 j--;
             }
@@ -200,7 +207,7 @@
             isSorted = true;
             for(let i = 0; i < arr.length - 1; i++){
                 for(let j = 0; j < arr.length - 1; j++){
-                    if(arr[j] > arr[j + 1]){
+                    if(arr[j].h > arr[j + 1].h){
                         isSorted = false;
                         swap(j, j + 1, arr);
                     }
@@ -213,10 +220,10 @@
     function selectionSort(arr){
         let spot = 0;
         for(let i = 0; i < arr.length; i++){
-            let curr = arr[i];
+            let curr = arr[i].h;
             let currInd = i;
             for(let j = i; j < arr.length; j++){
-                let inner = arr[j];
+                let inner = arr[j].h;
                 if(inner < curr){
                     curr = inner;
                     currInd = j;
@@ -243,5 +250,12 @@
 
     function random(m, t){
         return ~~(Math.random() * (t - m)) + m;
+    }
+
+    function resetPage(){
+        swapsCalled.innerText = "0";
+        timerTextLocation.innerText = "0";
+        timer = 0;
+        swapCount = 0;
     }
 })();
