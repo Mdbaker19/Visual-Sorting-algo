@@ -14,6 +14,7 @@
 
     const insertion = document.getElementById("insertionSort");
     const bubble = document.getElementById("bubbleSort");
+    const cockTail = document.getElementById("cockTailShakerSort");
     const selection = document.getElementById("selectionSort");
 
     const lowEnd = document.getElementById("lowHeight");
@@ -41,9 +42,9 @@
         drawTowersAfterCreated(randomTowerHeights);
     }
 
-    function sortingInProgress(sortInProgressArray){
+    function sortingInProgress(sortInProgressArray, towerAIndx, towerBIndx){
         createCanvas(); // draw the canvas
-        drawTowersAfterCreated(sortInProgressArray);
+        drawTowersAfterCreated(sortInProgressArray, towerAIndx, towerBIndx);
     }
 
 
@@ -57,10 +58,17 @@
     }
 
     //========== Draw those towers on the canvas at locations spaced based on amount of nums choosen and at height
-    function drawTowersAfterCreated(allTowersArr) {
+    function drawTowersAfterCreated(allTowersArr, towerAIndx, towerBIndx) {
         let towerWidth = canvasWidth  / allTowersArr.length;
         let towerLocation = 0;
         for(let i = 0; i < allTowersArr.length; i+=1){
+            if(i === towerAIndx){
+                drawRectangleShape(towerLocation, c.height, towerWidth - 2, -allTowersArr[i], "#f80303");
+                towerLocation += towerWidth;
+            } else if (i === towerBIndx){
+                drawRectangleShape(towerLocation, c.height, towerWidth - 2, -allTowersArr[i], "#2ae305");
+                towerLocation += towerWidth;
+            }
             drawRectangleShape(towerLocation, c.height, towerWidth - 2, -allTowersArr[i], "#ffffff");
             towerLocation += towerWidth;
         }
@@ -86,6 +94,13 @@
         clockAfter = performance.now();
         timerTextLocation.innerText = (clockAfter - clock).toFixed(4);
     });
+    cockTail.addEventListener("click", () => {
+        resetPage();
+        clock = performance.now();
+        cockTailShakerSort(randomTowerHeights);
+        clockAfter = performance.now();
+        timerTextLocation.innerText = (clockAfter - clock).toFixed(4);
+    })
     selection.addEventListener("click", () => {
         resetPage();
         clock = performance.now();
@@ -144,9 +159,9 @@
         if(numCount.value.length > 0) {
             let input = numCount.value;
             count = isNumberCheck(numCount.value, 100);
-            if(count > 5000){
-                count = 5000;
-                numCount.value = 5000;
+            if(count > 350){
+                count = 350;
+                numCount.value = 350;
             } else if (count < 3){
                 count = 3;
                 numCount.value = 3;
@@ -190,7 +205,7 @@
         arr[j] = temp;
         swapCount++;
         swapsCalled.innerText = swapCount;
-        sortingInProgress(arr); // attempt to re render the towers every swap ……… still does not work, just gives a delay and renders at the end
+        sortingInProgress(arr, i, j); // attempt to re render the towers every swap ……… still does not work, just gives a delay and renders at the end
     }
 
 
@@ -201,6 +216,7 @@
             while(j >= 0 && arr[j] > arr[j + 1]){
                 swap(j, j+1, arr);
                 j--;
+                // break; // does a one by one sorting
             }
         }
         return arr;
@@ -208,14 +224,38 @@
 
     function bubbleSort(arr){
         let isSorted = false;
+        let len = arr.length;
         while(!isSorted){
             isSorted = true;
-            for(let i = 0; i < arr.length - 1; i++){
+            for(let i = 0; i < len - 1; i++){
                 for(let j = 0; j < arr.length - 1; j++){
                     if(arr[j] > arr[j + 1]){
                         isSorted = false;
                         swap(j, j + 1, arr);
+                        // len--; // kind of does a sort visualizer ish
                     }
+                }
+            }
+        }
+        return arr;
+    }
+
+    function cockTailShakerSort(arr){
+        let isSorted = false;
+        while(!isSorted){
+            isSorted = true;
+            for(let i = 0; i < arr.length - 1; i++){
+                if(arr[i] > arr[i + 1]){
+                    isSorted = false;
+                    swap(i, i + 1, arr);
+                }
+            }
+            if(isSorted) break;
+            isSorted = true;
+            for(let i = arr.length - 1; i > 0; i--){
+                if(arr[i] < arr[i - 1]){
+                    isSorted = false;
+                    swap(i, i - 1, arr);
                 }
             }
         }
