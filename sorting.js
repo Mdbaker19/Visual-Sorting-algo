@@ -296,6 +296,7 @@
             for(let j = i; j < arr.length; j++){
                 let inner = arr[j];
                 if(inner < curr){
+                    await swap(spot, currInd, arr);
                     curr = inner;
                     currInd = j;
                 }
