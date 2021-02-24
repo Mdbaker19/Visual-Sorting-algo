@@ -235,7 +235,7 @@
         arr[j] = temp;
         swapCount++;
         swapsCalled.innerText = swapCount;
-        await sortingInProgress(arr, i, j); // attempt to re render the towers every swap ……… still does not work, just gives a delay and renders at the end
+        await sortingInProgress(arr, i, j);
     }
 
     async function insertionSort(arr){
@@ -297,6 +297,7 @@
                 let inner = arr[j];
                 if(inner < curr){
                     await swap(spot, currInd, arr);
+                    swapCount--;
                     curr = inner;
                     currInd = j;
                 }
