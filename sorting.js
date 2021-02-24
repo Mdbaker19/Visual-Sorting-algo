@@ -6,7 +6,7 @@
     const canvasWidth = c.width;
 
     let randomTowerHeights = [];
-    let rate = 150;
+    let rate = 30;
     let swapCount = 0;
     let timer = 0;
     let clock;
@@ -17,16 +17,22 @@
     const cockTail = document.getElementById("cockTailShakerSort");
     const selection = document.getElementById("selectionSort");
 
+    const endAll = document.getElementById("endIt");
+    endAll.addEventListener("click", () => {
+        window.location.reload();
+    });
+
     const sortInputs = document.getElementsByClassName("sortInput");
 
     const lowEnd = document.getElementById("lowHeight");
     const highEnd = document.getElementById("highHeight");
 
-    // const speedAdjBtn  = document.getElementById("changeSpeed");
-    // const speed = document.getElementById("inputSpeed");
-    // speedAdjBtn.addEventListener("click", () => {
-    //     rate = speed.value || 150;
-    // });
+    const speedAdjBtn  = document.getElementById("changeSpeed");
+    const speed = document.getElementById("inputSpeed");
+    speedAdjBtn.addEventListener("click", () => {
+        rate = speed.value || 30;
+        speedAdjBtn.innerText = rate + " ms / cycle";
+    });
 
     const timerTextLocation = document.getElementById("timer");
     const numCount = document.getElementById("numberCount");
@@ -70,9 +76,10 @@
             } else if (i === towerBIndx){
                 drawRectangleShape(towerLocation, c.height, towerWidth - 2, -allTowersArr[i], "#2ae305");
                 towerLocation += towerWidth;
+            } else {
+                drawRectangleShape(towerLocation, c.height, towerWidth - 2, -allTowersArr[i], "#ffffff");
+                towerLocation += towerWidth;
             }
-            drawRectangleShape(towerLocation, c.height, towerWidth - 2, -allTowersArr[i], "#ffffff");
-            towerLocation += towerWidth;
         }
     }
 
@@ -83,32 +90,44 @@
 
 
     insertion.addEventListener("click", () => {
+        disableButtons();
         resetPage();
         clock = performance.now();
-        insertionSort(randomTowerHeights);
-        clockAfter = performance.now();
-        timerTextLocation.innerText = timeFormat(clockAfter - clock);
+        insertionSort(randomTowerHeights).then( () => {
+            fullColor(randomTowerHeights)
+            clockAfter = performance.now();
+            timerTextLocation.innerText = timeFormat(clockAfter - clock);
+        });
     });
     bubble.addEventListener("click", () => {
+        disableButtons();
         resetPage();
         clock = performance.now();
-        bubbleSort(randomTowerHeights);
-        clockAfter = performance.now();
-        timerTextLocation.innerText = timeFormat(clockAfter - clock);
+        bubbleSort(randomTowerHeights).then( () => {
+            fullColor(randomTowerHeights)
+            clockAfter = performance.now();
+            timerTextLocation.innerText = timeFormat(clockAfter - clock);
+        });
     });
     cockTail.addEventListener("click", () => {
+        disableButtons();
         resetPage();
         clock = performance.now();
-        cockTailShakerSort(randomTowerHeights);
-        clockAfter = performance.now();
-        timerTextLocation.innerText = timeFormat(clockAfter - clock);
+        cockTailShakerSort(randomTowerHeights).then( () => {
+            fullColor(randomTowerHeights)
+            clockAfter = performance.now();
+            timerTextLocation.innerText = timeFormat(clockAfter - clock);
+        });
     })
     selection.addEventListener("click", () => {
+        disableButtons();
         resetPage();
         clock = performance.now();
-        selectionSort(randomTowerHeights);
-        clockAfter = performance.now();
-        timerTextLocation.innerText = timeFormat(clockAfter - clock);
+        selectionSort(randomTowerHeights).then( () => {
+            fullColor(randomTowerHeights)
+            clockAfter = performance.now();
+            timerTextLocation.innerText = timeFormat(clockAfter - clock);
+        });
     });
 
     Array.from(sortInputs).forEach(input => {
@@ -118,6 +137,16 @@
     });
 
 
+    async function fullColor(arr){
+        let towerWidth = canvasWidth  / arr.length;
+        let towerLocation = 0;
+        for(let i = 0; i < arr.length; i++){
+            await sleep(10);
+            drawRectangleShape(towerLocation, c.height, towerWidth - 2, -arr[i], "#0ca3e1");
+            towerLocation += towerWidth;
+        }
+        releaseButtons();
+    }
 
 
 
@@ -192,6 +221,8 @@
 
         setUp(count, shortest, tallest);
         restart.innerText = "Reset";
+        speedAdjBtn.innerText = "Change Speed";
+        releaseButtons();
     }
 
 
@@ -208,10 +239,22 @@
     }
 
 
+    function releaseButtons(){
+        insertion.disabled = false;
+        selection.disabled = false;
+        bubble.disabled = false;
+        cockTail.disabled = false;
+    }
+    function disableButtons(){
+        insertion.disabled = true;
+        selection.disabled = true;
+        bubble.disabled = true;
+        cockTail.disabled = true;
+    }
 
 
     async function swap(i, j, arr){
-        await sleep(100);
+        await sleep(rate);
         let temp = arr[i];
         arr[i] = arr[j];
         arr[j] = temp;
