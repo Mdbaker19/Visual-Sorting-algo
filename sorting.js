@@ -17,6 +17,8 @@
     const cockTail = document.getElementById("cockTailShakerSort");
     const selection = document.getElementById("selectionSort");
 
+    const sortInputs = document.getElementsByClassName("sortInput");
+
     const lowEnd = document.getElementById("lowHeight");
     const highEnd = document.getElementById("highHeight");
 
@@ -42,7 +44,7 @@
         drawTowersAfterCreated(randomTowerHeights);
     }
 
-    function sortingInProgress(sortInProgressArray, towerAIndx, towerBIndx){
+    async function sortingInProgress(sortInProgressArray, towerAIndx, towerBIndx){
         createCanvas(); // draw the canvas
         drawTowersAfterCreated(sortInProgressArray, towerAIndx, towerBIndx);
     }
@@ -85,30 +87,35 @@
         clock = performance.now();
         insertionSort(randomTowerHeights);
         clockAfter = performance.now();
-        timerTextLocation.innerText = (clockAfter - clock).toFixed(4);
+        timerTextLocation.innerText = timeFormat(clockAfter - clock);
     });
     bubble.addEventListener("click", () => {
         resetPage();
         clock = performance.now();
         bubbleSort(randomTowerHeights);
         clockAfter = performance.now();
-        timerTextLocation.innerText = (clockAfter - clock).toFixed(4);
+        timerTextLocation.innerText = timeFormat(clockAfter - clock);
     });
     cockTail.addEventListener("click", () => {
         resetPage();
         clock = performance.now();
         cockTailShakerSort(randomTowerHeights);
         clockAfter = performance.now();
-        timerTextLocation.innerText = (clockAfter - clock).toFixed(4);
+        timerTextLocation.innerText = timeFormat(clockAfter - clock);
     })
     selection.addEventListener("click", () => {
         resetPage();
         clock = performance.now();
         selectionSort(randomTowerHeights);
         clockAfter = performance.now();
-        timerTextLocation.innerText = (clockAfter - clock).toFixed(4);
+        timerTextLocation.innerText = timeFormat(clockAfter - clock);
     });
 
+    Array.from(sortInputs).forEach(input => {
+        input.addEventListener("input", () => {
+            restart.innerText = "Apply Changes";
+        });
+    });
 
 
 
@@ -125,7 +132,12 @@
         swapCount = 0;
     }
 
-    restart.addEventListener("click", () => {
+    restart.addEventListener("click", resetSorter);
+    window.addEventListener("keydown", (e) => {
+        if(e.key === "Enter") resetSorter(); // why is this not working like i think it should ?
+    });
+
+    function resetSorter(){
         randomTowerHeights = [];
         swapsCalled.innerText = "0";
         let shortest = 5;
@@ -146,13 +158,13 @@
 
         if(highEnd.value.length > 0){
             let input = highEnd.value;
-            tallest = isNumberCheck(highEnd.value, 695);
+            tallest = isNumberCheck(highEnd.value, 735);
             if(input !== tallest){
                 highEnd.value = tallest;
             }
-            if(tallest > 695){
-                tallest = 695;
-                highEnd.value = 695;
+            if(tallest > 735){
+                tallest = 735;
+                highEnd.value = 735;
             }
         }
 
@@ -179,9 +191,8 @@
         }
 
         setUp(count, shortest, tallest);
-    });
-
-
+        restart.innerText = "Reset";
+    }
 
 
 
@@ -199,22 +210,23 @@
 
 
 
-    function swap(i, j, arr){
+    async function swap(i, j, arr){
+        await sleep(100);
         let temp = arr[i];
         arr[i] = arr[j];
         arr[j] = temp;
         swapCount++;
         swapsCalled.innerText = swapCount;
-        sortingInProgress(arr, i, j); // attempt to re render the towers every swap ……… still does not work, just gives a delay and renders at the end
+        await sortingInProgress(arr, i, j); // attempt to re render the towers every swap ……… still does not work, just gives a delay and renders at the end
     }
 
 
 
-    function insertionSort(arr){
+    async function insertionSort(arr){
         for(let i = 0; i < arr.length - 1; i++){
             let j = i;
             while(j >= 0 && arr[j] > arr[j + 1]){
-                swap(j, j+1, arr);
+                await swap(j, j+1, arr);
                 j--;
                 // break; // does a one by one sorting
             }
@@ -222,7 +234,7 @@
         return arr;
     }
 
-    function bubbleSort(arr){
+    async function bubbleSort(arr){
         let isSorted = false;
         let len = arr.length;
         while(!isSorted){
@@ -231,7 +243,7 @@
                 for(let j = 0; j < arr.length - 1; j++){
                     if(arr[j] > arr[j + 1]){
                         isSorted = false;
-                        swap(j, j + 1, arr);
+                        await swap(j, j + 1, arr);
                         // len--; // kind of does a sort visualizer ish
                     }
                 }
@@ -240,14 +252,14 @@
         return arr;
     }
 
-    function cockTailShakerSort(arr){
+    async function cockTailShakerSort(arr){
         let isSorted = false;
         while(!isSorted){
             isSorted = true;
             for(let i = 0; i < arr.length - 1; i++){
                 if(arr[i] > arr[i + 1]){
                     isSorted = false;
-                    swap(i, i + 1, arr);
+                    await swap(i, i + 1, arr);
                 }
             }
             if(isSorted) break;
@@ -255,14 +267,14 @@
             for(let i = arr.length - 1; i > 0; i--){
                 if(arr[i] < arr[i - 1]){
                     isSorted = false;
-                    swap(i, i - 1, arr);
+                    await swap(i, i - 1, arr);
                 }
             }
         }
         return arr;
     }
 
-    function selectionSort(arr){
+    async function selectionSort(arr){
         let spot = 0;
         for(let i = 0; i < arr.length; i++){
             let curr = arr[i];
@@ -274,10 +286,14 @@
                     currInd = j;
                 }
             }
-            swap(spot, currInd, arr);
+            await swap(spot, currInd, arr);
             spot++;
         }
         return arr;
+    }
+
+    function sleep(ms){
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 
 
@@ -287,6 +303,11 @@
 
     function isNumberCheck(input, x){
         return isNaN(input) ? x : parseFloat(input);
+    }
+
+    function timeFormat(ms){
+        let checkMs = ms.toString().split(".")[0];
+        return checkMs.length > 3 ? (ms / 1000).toFixed(2) + " sec" : ms.toFixed(4) + " ms";
     }
 
 })();

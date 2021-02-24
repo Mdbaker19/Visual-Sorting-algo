@@ -10,33 +10,42 @@
 </head>
 <body>
 
-    <canvas id="canvas" width="1500" height="700"></canvas><br>
-    <button id="insertionSort">Insertion Sort</button><br>
-    <button id="bubbleSort">Bubble Sort</button><br>
-    <button id="cockTailShakerSort">CockTail Shaker Sort</button><br>
-    <button id="selectionSort">Selection Sort</button><br>
-    <label>
-        How fast to cycle <!--(default 150ms)-->
-        <input id="inputSpeed" placeholder="Work In Progress" disabled>
-    </label>
-    <button id="changeSpeed" disabled>Change Speed</button><br>
-    <label>
-        Enter how many numbers (default 100) ( n >= 3 && n <= 350 )
-        <input id="numberCount">
-    </label><br>
-    <label>
-        Enter low range ( n > 0 )
-        <input id="lowHeight">
-    </label>
-    <label>
-        Enter high range ( n < 695 )
-        <input id="highHeight">
-    </label>
-    <button id="reset">Reset</button><br>
+    <canvas id="canvas" width="1400" height="750"></canvas><br>
+    <div id="main">
+        <div id="left">
+            <div id="buttons">
+                <button id="insertionSort">Insertion Sort</button><br>
+                <button id="bubbleSort">Bubble Sort</button><br>
+                <button id="cockTailShakerSort">CockTail Shaker Sort</button><br>
+                <button id="selectionSort">Selection Sort</button><br>
+            </div>
+            <label>
+                How fast to cycle <!--(default 150ms)-->
+                <input id="inputSpeed" placeholder="Work In Progress" disabled>
+            </label>
+            <button id="changeSpeed" disabled>Change Speed</button><br>
+            <label>
+                Enter how many numbers ( n >= 3 && n <= 350 )
+                <input class="sortInput" id="numberCount" placeholder="100">
+            </label><br>
+            <label>
+                Enter low range ( n >= 1 )
+                <input class="sortInput" id="lowHeight" placeholder="5">
+            </label>
+            <br>
+            <label>
+                Enter high range ( n <= 735 )
+                <input class="sortInput" id="highHeight" placeholder="550">
+            </label>
+            <button id="reset">Reset</button><br>
+        </div>
+        <div id="right">
+            <p>Amount of swaps called :  <span id="swapsText"></span></p>
+            <p>Time passed : <span id="timer"></span></p>
+        </div>
+    <div>
 
-    <p>Amount of swaps called :  <span id="swapsText"></span></p><br>
-    <p>Time passed : <span id="timer"></span></p>
 
-<script src="sorting.js"></script>
+        <script src="sorting.js"></script>
 </body>
 </html>
