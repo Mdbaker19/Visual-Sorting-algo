@@ -41,7 +41,7 @@
 
     // draw canvas
     createCanvas();
-    setUp(100, 2, 598); // initial set up for 100 numbers
+    setUp(50, 2, 598); // initial set up for 100 numbers
 
 
     function setUp(x, y, h) { // used on reset for new range of numbers
@@ -52,7 +52,7 @@
 
     async function sortingInProgress(sortInProgressArray, towerAIndx, towerBIndx){
         createCanvas(); // draw the canvas
-        drawTowersAfterCreated(sortInProgressArray, towerAIndx, towerBIndx);
+        drawTowersAfterCreated(sortInProgressArray, towerAIndx, towerBIndx); // draw the towers currently being swapped in a different color
     }
 
 
@@ -154,12 +154,6 @@
 
 
 
-    function resetPage(){
-        swapsCalled.innerText = "0";
-        timerTextLocation.innerText = "0";
-        timer = 0;
-        swapCount = 0;
-    }
 
     restart.addEventListener("click", resetSorter);
     window.addEventListener("keydown", (e) => {
@@ -171,7 +165,7 @@
         swapsCalled.innerText = "0";
         let shortest = 5;
         let tallest = 550;
-        let count = 100;
+        let count = 50;
 
         if(lowEnd.value.length > 0){
             let input = lowEnd.value;
@@ -228,29 +222,10 @@
 
 
 
-    function createCanvas(){
-        drawRectangleShape(0, 0, c.width, c.height, "#181818");
-    }
 
 
-    function drawRectangleShape(lx, ty, w, h, c){
-        cc.fillStyle = c;
-        cc.fillRect(lx, ty, w, h);
-    }
 
 
-    function releaseButtons(){
-        insertion.disabled = false;
-        selection.disabled = false;
-        bubble.disabled = false;
-        cockTail.disabled = false;
-    }
-    function disableButtons(){
-        insertion.disabled = true;
-        selection.disabled = true;
-        bubble.disabled = true;
-        cockTail.disabled = true;
-    }
 
 
     async function swap(i, j, arr){
@@ -263,15 +238,12 @@
         await sortingInProgress(arr, i, j); // attempt to re render the towers every swap ……… still does not work, just gives a delay and renders at the end
     }
 
-
-
     async function insertionSort(arr){
         for(let i = 0; i < arr.length - 1; i++){
             let j = i;
             while(j >= 0 && arr[j] > arr[j + 1]){
                 await swap(j, j+1, arr);
                 j--;
-                // break; // does a one by one sorting
             }
         }
         return arr;
@@ -287,7 +259,6 @@
                     if(arr[j] > arr[j + 1]){
                         isSorted = false;
                         await swap(j, j + 1, arr);
-                        // len--; // kind of does a sort visualizer ish
                     }
                 }
             }
@@ -335,22 +306,48 @@
         return arr;
     }
 
+    function releaseButtons(){
+        insertion.disabled = false;
+        selection.disabled = false;
+        bubble.disabled = false;
+        cockTail.disabled = false;
+        speedAdjBtn.disabled = false;
+        restart.disabled = false;
+    }
+    function disableButtons(){
+        insertion.disabled = true;
+        selection.disabled = true;
+        bubble.disabled = true;
+        cockTail.disabled = true;
+        speedAdjBtn.disabled = true;
+        restart.disabled = true;
+    }
+
+    function resetPage(){
+        swapsCalled.innerText = "0";
+        timerTextLocation.innerText = "0";
+        timer = 0;
+        swapCount = 0;
+    }
+
+    function createCanvas(){
+        drawRectangleShape(0, 0, c.width, c.height, "#181818");
+    }
+    function drawRectangleShape(lx, ty, w, h, c){
+        cc.fillStyle = c;
+        cc.fillRect(lx, ty, w, h);
+    }
     function sleep(ms){
         return new Promise(resolve => setTimeout(resolve, ms));
     }
-
-
     function random(m, t){
         return ~~(Math.random() * (t - m)) + m;
     }
-
     function isNumberCheck(input, x){
         return isNaN(input) ? x : parseFloat(input);
     }
-
     function timeFormat(ms){
         let checkMs = ms.toString().split(".")[0];
         return checkMs.length > 3 ? (ms / 1000).toFixed(2) + " sec" : ms.toFixed(4) + " ms";
     }
-
 })();
