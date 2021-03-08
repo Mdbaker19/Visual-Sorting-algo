@@ -10,6 +10,7 @@ body{
 }
 #canvas{
     border: 5px solid #1f1f1f;
+    width: 300px;
 }
 
 
@@ -24,6 +25,7 @@ button{
     margin: 5px;
     background-color: #a8a7a7;
     border-radius: 5px;
+    font-size: 8px;
 }
 
 
@@ -40,6 +42,7 @@ input{
     display: flex;
     width: 100%;
     max-width: 1510px;
+    font-size: 10px;
 }
 #right{
     display: flex;
@@ -52,4 +55,80 @@ input{
 }
 #buttons{
     display: flex;
+}
+@media screen and (min-width: 400px){
+    #canvas{
+        width: 380px;
+    }
+}
+@media screen and (min-width: 500px){
+    #canvas{
+        width: 480px;
+    }
+    #main{
+        font-size: 11px;
+    }
+    button{
+        font-size: 9px;
+    }
+}
+@media screen and (min-width: 600px){
+    #canvas{
+        width: 580px;
+    }
+    #main{
+        font-size: 12px;
+    }
+    button{
+        font-size: 10px;
+    }
+}
+@media screen and (min-width: 768px){
+    #canvas{
+        width: 750px;
+    }
+    #main{
+        font-size: 13px;
+    }
+    button{
+        font-size: 11px;
+    }
+}
+@media screen and (min-width: 900px){
+    #canvas{
+        width: 880px;
+    }
+    #main{
+        font-size: 14px;
+    }
+    button{
+        font-size: 12px;
+    }
+}
+@media screen and (min-width: 1100px){
+    #canvas{
+        width: 1080px;
+    }
+    #main{
+        font-size: 15px;
+    }
+    button{
+        font-size: 13px;
+    }
+}
+@media screen and (min-width: 1290px){
+    #canvas{
+        width: 1250px;
+    }
+    #main{
+        font-size: 16px;
+    }
+    button{
+        font-size: 14px;
+    }
+}
+@media screen and (min-width: 1410px){
+    #canvas{
+        width: 1380px;
+    }
 }
