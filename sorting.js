@@ -14,6 +14,7 @@
 
     const insertion = document.getElementById("insertionSort");
     const bubble = document.getElementById("bubbleSort");
+    const quick = document.getElementById("quickSort");
     const cockTail = document.getElementById("cockTailShakerSort");
     const selection = document.getElementById("selectionSort");
 
@@ -41,7 +42,7 @@
 
     // draw canvas
     createCanvas();
-    setUp(50, 2, 598); // initial set up for 100 numbers
+    setUp(50, 1, 598); // initial set up for 100 numbers
 
 
     function setUp(x, y, h) { // used on reset for new range of numbers
@@ -72,61 +73,66 @@
         for(let i = 0; i < allTowersArr.length; i+=1){
             if(i === towerAIndx){
                 drawRectangleShape(towerLocation, c.height, towerWidth - 2, -allTowersArr[i], "#f80303");
+                cc.fillStyle = "#000";
+                cc.fillText(allTowersArr[i], towerLocation + towerWidth / 5, c.height - 2);
                 towerLocation += towerWidth;
             } else if (i === towerBIndx){
                 drawRectangleShape(towerLocation, c.height, towerWidth - 2, -allTowersArr[i], "#2ae305");
+                cc.fillStyle = "#000";
+                cc.fillText(allTowersArr[i], towerLocation + towerWidth / 5, c.height - 2);
                 towerLocation += towerWidth;
             } else {
                 drawRectangleShape(towerLocation, c.height, towerWidth - 2, -allTowersArr[i], "#ffffff");
+                cc.fillStyle = "#000";
+                cc.fillText(allTowersArr[i], towerLocation + towerWidth / 5, c.height - 2);
                 towerLocation += towerWidth;
             }
         }
     }
 
 
-
-
-
-
-
-    insertion.addEventListener("click", () => {
+    function start(){
         disableButtons();
         resetPage();
         clock = performance.now();
+    }
+
+    function finish(arr){
+        fullColor(arr);
+        clockAfter = performance.now();
+        timerTextLocation.innerText = timeFormat(clockAfter - clock);
+    }
+
+
+    quick.addEventListener("click", () => {
+        start();
+        quickSort(randomTowerHeights, 0, randomTowerHeights.length - 1).then( () => {
+            finish(randomTowerHeights);
+        });
+    });
+
+    insertion.addEventListener("click", () => {
+        start();
         insertionSort(randomTowerHeights).then( () => {
-            fullColor(randomTowerHeights)
-            clockAfter = performance.now();
-            timerTextLocation.innerText = timeFormat(clockAfter - clock);
+            finish(randomTowerHeights);
         });
     });
     bubble.addEventListener("click", () => {
-        disableButtons();
-        resetPage();
-        clock = performance.now();
+        start();
         bubbleSort(randomTowerHeights).then( () => {
-            fullColor(randomTowerHeights)
-            clockAfter = performance.now();
-            timerTextLocation.innerText = timeFormat(clockAfter - clock);
+            finish(randomTowerHeights);
         });
     });
     cockTail.addEventListener("click", () => {
-        disableButtons();
-        resetPage();
-        clock = performance.now();
+        start();
         cockTailShakerSort(randomTowerHeights).then( () => {
-            fullColor(randomTowerHeights)
-            clockAfter = performance.now();
-            timerTextLocation.innerText = timeFormat(clockAfter - clock);
+            finish(randomTowerHeights);
         });
     })
     selection.addEventListener("click", () => {
-        disableButtons();
-        resetPage();
-        clock = performance.now();
+        start();
         selectionSort(randomTowerHeights).then( () => {
-            fullColor(randomTowerHeights)
-            clockAfter = performance.now();
-            timerTextLocation.innerText = timeFormat(clockAfter - clock);
+            finish(randomTowerHeights);
         });
     });
 
@@ -142,7 +148,9 @@
         let towerLocation = 0;
         for(let i = 0; i < arr.length; i++){
             await sleep(10);
-            drawRectangleShape(towerLocation, c.height, towerWidth - 2, -arr[i], "#0ca3e1");
+            drawRectangleShape(towerLocation, c.height, towerWidth - 2, -arr[i], "#0868b7");
+            cc.fillStyle = "#fcfbfb";
+            cc.fillText(arr[i], towerLocation + towerWidth / 5, c.height - 2);
             towerLocation += towerWidth;
         }
         releaseButtons();
@@ -249,6 +257,44 @@
         return arr;
     }
 
+
+    async function quickSort (arr, left, right) {
+        let index;
+        if (arr.length > 1) {
+            index = await partition(arr, left, right); //index returned from partition
+            if (left < index - 1) { //more elements on the left side of the pivot
+                await quickSort(arr, left, index - 1);
+            }
+            if (index < right) { //more elements on the right side of the pivot
+                await quickSort(arr, index, right);
+            }
+        }
+        return arr;
+    }
+
+
+    async function partition(items, left, right) {
+        let pivot   = items[Math.floor((right + left) / 2)], //middle element
+            i       = left, //left pointer
+            j       = right; //right pointer
+        while (i <= j) {
+            while (items[i] < pivot) {
+                i++;
+            }
+            while (items[j] > pivot) {
+                j--;
+            }
+            if (i <= j) {
+                await swap(i, j, items);
+                i++;
+                j--;
+            }
+        }
+        return i;
+    }
+
+
+
     async function bubbleSort(arr){
         let isSorted = false;
         let len = arr.length;
@@ -313,12 +359,14 @@
         selection.disabled = false;
         bubble.disabled = false;
         cockTail.disabled = false;
+        quick.disabled = false;
         speedAdjBtn.disabled = false;
         restart.disabled = false;
     }
     function disableButtons(){
         insertion.disabled = true;
         selection.disabled = true;
+        quick.disabled = true;
         bubble.disabled = true;
         cockTail.disabled = true;
         speedAdjBtn.disabled = true;
