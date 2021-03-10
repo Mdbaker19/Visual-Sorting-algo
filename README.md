@@ -6,7 +6,7 @@ Build on HTML canvas rendering different towers of different lengths based on us
 Currently contains methods for [Insertion](#insertion-sort), [Bubble](#bubble-sort), [CockTail Shaker](#cocktail-shaker-sort), [Quick](#quick-sort) and [Selection](#selection-sort) sort                                                   
 User is allowed to enter the high and low end ranges, adjust swap speed and change the amount of towers to sort
 
-## Screenshot
+## Home Screen
 
 ![home screen](img/homescreen.png)
 
