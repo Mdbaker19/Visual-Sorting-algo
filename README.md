@@ -10,5 +10,17 @@ User is allowed to enter the high and low end ranges, adjust swap speed and chan
 
 ![home screen](img/homescreen.png)
 
-## Gif
-![quick sort](img/quicksort.gif)
+## Quick Sort
+![quick sort](img/quickSort_gif.gif)
+
+## Insertion Sort
+![insertion sort](img/insertionSort_gif.gif)
+
+## Cocktail Shaker Sort
+![cocktail sort](img/cocktailSort_gif.gif)
+
+## Selection Sort
+![selection sort](img/selectionSort_gif.gif)
+
+## Bubble Sort
+![bubble sort](img/bubbleSort_gif.gif)
