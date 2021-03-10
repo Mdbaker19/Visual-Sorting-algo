@@ -22,7 +22,7 @@ Insertion sort works with 2 sub arrays from the input array. One being sorted at
 
 ## Cocktail Shaker Sort
 ![cocktail sort](img/cocktailSort_gif.gif)
-Cocktail Shaker works similar to bubble sort with a value picked on the pass back through the array with the smallest value found and swapped until either at the beginning of the array or a smaller value is found.
+Cocktail Shaker works similar to [Bubble](#bubble-sort) sort with a value picked on the pass back through the array with the smallest value found and swapped until either at the beginning of the array or a smaller value is found.
 [Top](#visual-sorting-algo)
 
 ## Selection Sort
