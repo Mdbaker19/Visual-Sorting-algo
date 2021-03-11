@@ -12,6 +12,7 @@ User is allowed to enter the high and low end ranges, adjust swap speed and chan
 
 ## Quick Sort
 ![quick sort](img/quickSort_gif.gif)
+----
   Quick sort works by picking a 'pivot' value from the array and placing all other values in sorted order with respect to the pivot value. This process is then       repeated with the sections that are now divided with respect to the initial pivot value.
 [Top](#visual-sorting-algo)
 
